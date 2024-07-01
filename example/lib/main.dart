@@ -12,7 +12,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   GlobalKey<FormState> _formKey = GlobalKey();
-
+  final TextEditingController controller = TextEditingController();
   FocusNode focusNode = FocusNode();
 
   @override
@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp> {
                 ),
                 IntlPhoneField(
                   favourite: ['AE'],
+                  controller: controller,
                   focusNode: focusNode,
                   decoration: InputDecoration(
                     labelText: 'Phone Number',
@@ -78,6 +79,8 @@ class _MyAppState extends State<MyApp> {
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   onPressed: () {
+                    print(controller.text);
+
                     _formKey.currentState?.validate();
                   },
                 ),
