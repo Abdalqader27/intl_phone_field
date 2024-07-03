@@ -73,13 +73,16 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
   @override
   void initState() {
     _selectedCountry = widget.selectedCountry;
-    _favoriteCountries = getCountriesByCountriesCode(widget.favorite, widget.filteredCountries);
+    _favoriteCountries =
+        getCountriesByCountriesCode(widget.favorite, widget.filteredCountries);
 
     _filteredFavoriteCountries = _favoriteCountries;
 
     _filteredCountries = widget.filteredCountries.toList()
       ..sort(
-        (a, b) => a.localizedName(widget.languageCode).compareTo(b.localizedName(widget.languageCode)),
+        (a, b) => a
+            .localizedName(widget.languageCode)
+            .compareTo(b.localizedName(widget.languageCode)),
       );
 
     super.initState();
@@ -103,7 +106,8 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: widget.style?.searchFieldPadding ?? const EdgeInsets.all(0),
+              padding:
+                  widget.style?.searchFieldPadding ?? const EdgeInsets.all(0),
               child: TextField(
                 cursorColor: widget.style?.searchFieldCursorColor,
                 decoration: widget.style?.searchFieldInputDecoration ??
@@ -126,7 +130,8 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
-                          final Country item = _filteredFavoriteCountries[index];
+                          final Country item =
+                              _filteredFavoriteCountries[index];
                           return _buildCountryPickerItem(item);
                         },
                         childCount: _filteredFavoriteCountries.length,
@@ -154,10 +159,12 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
   void search(String value) {
     _filteredCountries = widget.countryList
         .stringSearch(value)
-        .where((item) => widget.favorite.any((code) => item.code != code))
+        .where((item) => !widget.favorite.contains(item.code))
         .toList()
       ..sort(
-        (a, b) => a.localizedName(widget.languageCode).compareTo(b.localizedName(widget.languageCode)),
+        (a, b) => a
+            .localizedName(widget.languageCode)
+            .compareTo(b.localizedName(widget.languageCode)),
       );
     _filteredFavoriteCountries = _favoriteCountries.stringSearch(value);
   }
@@ -179,11 +186,13 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
           contentPadding: widget.style?.listTilePadding,
           title: Text(
             item.localizedName(widget.languageCode),
-            style: widget.style?.countryNameStyle ?? const TextStyle(fontWeight: FontWeight.w700),
+            style: widget.style?.countryNameStyle ??
+                const TextStyle(fontWeight: FontWeight.w700),
           ),
           trailing: Text(
             '+${item.dialCode}',
-            style: widget.style?.countryCodeStyle ?? const TextStyle(fontWeight: FontWeight.w700),
+            style: widget.style?.countryCodeStyle ??
+                const TextStyle(fontWeight: FontWeight.w700),
           ),
           onTap: () {
             _selectedCountry = item;
