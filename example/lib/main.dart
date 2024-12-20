@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
                   height: 10,
                 ),
                 IntlPhoneField(
-                  favourite: ['AE','SA','LB'],
+                  favourite: ['AE', 'SA', 'LB'],
                   controller: controller,
                   focusNode: focusNode,
                   decoration: InputDecoration(
@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
                       borderSide: BorderSide(),
                     ),
                   ),
-                  languageCode: "en",
+                  languageCode: "GB",
                   onChanged: (phone) {
                     print(phone.completeNumber);
                   },
