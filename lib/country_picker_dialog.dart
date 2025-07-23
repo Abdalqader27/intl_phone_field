@@ -49,7 +49,7 @@ class CountryPickerDialog extends StatefulWidget {
   final String languageCode;
 
   const CountryPickerDialog({
-    Key? key,
+    super.key,
     this.favorite = const [],
     required this.searchText,
     required this.languageCode,
@@ -58,7 +58,7 @@ class CountryPickerDialog extends StatefulWidget {
     required this.selectedCountry,
     required this.filteredCountries,
     this.style,
-  }) : super(key: key);
+  });
 
   @override
   State<CountryPickerDialog> createState() => _CountryPickerDialogState();
@@ -73,8 +73,10 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
   @override
   void initState() {
     _selectedCountry = widget.selectedCountry;
-    _favoriteCountries =
-        getCountriesByCountriesCode(widget.favorite, widget.filteredCountries);
+    _favoriteCountries = getCountriesByCountriesCode(
+      widget.favorite,
+      widget.filteredCountries,
+    );
 
     _filteredFavoriteCountries = _favoriteCountries;
 
@@ -96,10 +98,11 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
     const defaultVerticalPadding = 24.0;
     return Dialog(
       insetPadding: EdgeInsets.symmetric(
-          vertical: defaultVerticalPadding,
-          horizontal: mediaWidth > (width + defaultHorizontalPadding * 2)
-              ? (mediaWidth - width) / 2
-              : defaultHorizontalPadding),
+        vertical: defaultVerticalPadding,
+        horizontal: mediaWidth > (width + defaultHorizontalPadding * 2)
+            ? (mediaWidth - width) / 2
+            : defaultHorizontalPadding,
+      ),
       backgroundColor: widget.style?.backgroundColor,
       child: Container(
         padding: widget.style?.padding ?? const EdgeInsets.all(10),
@@ -110,7 +113,8 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                   widget.style?.searchFieldPadding ?? const EdgeInsets.all(0),
               child: TextField(
                 cursorColor: widget.style?.searchFieldCursorColor,
-                decoration: widget.style?.searchFieldInputDecoration ??
+                decoration:
+                    widget.style?.searchFieldInputDecoration ??
                     InputDecoration(
                       suffixIcon: const Icon(Icons.search),
                       labelText: widget.searchText,
@@ -128,25 +132,24 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                 slivers: [
                   if (_filteredFavoriteCountries.isNotEmpty) ...[
                     SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          final Country item =
-                              _filteredFavoriteCountries[index];
-                          return _buildCountryPickerItem(item);
-                        },
-                        childCount: _filteredFavoriteCountries.length,
-                      ),
+                      delegate: SliverChildBuilderDelegate((
+                        BuildContext context,
+                        int index,
+                      ) {
+                        final Country item = _filteredFavoriteCountries[index];
+                        return _buildCountryPickerItem(item);
+                      }, childCount: _filteredFavoriteCountries.length),
                     ),
                   ],
                   SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        final Country item = _filteredCountries[index];
-                        return _buildCountryPickerItem(item);
-                      },
-                      childCount: _filteredCountries.length,
-                    ),
-                  )
+                    delegate: SliverChildBuilderDelegate((
+                      BuildContext context,
+                      int index,
+                    ) {
+                      final Country item = _filteredCountries[index];
+                      return _buildCountryPickerItem(item);
+                    }, childCount: _filteredCountries.length),
+                  ),
                 ],
               ),
             ),
@@ -157,15 +160,16 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
   }
 
   void search(String value) {
-    _filteredCountries = widget.countryList
-        .stringSearch(value)
-        .where((item) => !widget.favorite.contains(item.code))
-        .toList()
-      ..sort(
-        (a, b) => a
-            .localizedName(widget.languageCode)
-            .compareTo(b.localizedName(widget.languageCode)),
-      );
+    _filteredCountries =
+        widget.countryList
+            .stringSearch(value)
+            .where((item) => !widget.favorite.contains(item.code))
+            .toList()
+          ..sort(
+            (a, b) => a
+                .localizedName(widget.languageCode)
+                .compareTo(b.localizedName(widget.languageCode)),
+          );
     _filteredFavoriteCountries = _favoriteCountries.stringSearch(value);
   }
 
@@ -179,19 +183,18 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                   package: 'intl_phone_field',
                   width: 32,
                 )
-              : Text(
-                  item.flag,
-                  style: const TextStyle(fontSize: 18),
-                ),
+              : Text(item.flag, style: const TextStyle(fontSize: 18)),
           contentPadding: widget.style?.listTilePadding,
           title: Text(
             item.localizedName(widget.languageCode),
-            style: widget.style?.countryNameStyle ??
+            style:
+                widget.style?.countryNameStyle ??
                 const TextStyle(fontWeight: FontWeight.w700),
           ),
           trailing: Text(
             '+${item.dialCode}',
-            style: widget.style?.countryCodeStyle ??
+            style:
+                widget.style?.countryCodeStyle ??
                 const TextStyle(fontWeight: FontWeight.w700),
           ),
           onTap: () {
